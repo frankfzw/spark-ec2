@@ -177,7 +177,7 @@ def parse_args():
         prog="spark-ec2",
         version="%prog {v}".format(v=SPARK_EC2_VERSION),
         usage="%prog [options] <action> <cluster_name>\n\n"
-        + "<action> can be: launch, destroy, login, stop, start, get-master, reboot-slaves")
+        + "<action> can be: launch, destroy, login, stop, start, get-master, reboot-slaves, delete-slaves")
 
     parser.add_option(
         "-s", "--slaves", type="int", default=1,
@@ -1429,6 +1429,24 @@ def real_main():
                 if not success:
                     print("Failed to delete all security groups after 3 tries.")
                     print("Try re-running in a few minutes.")
+
+    elif action == "delete-slaves":
+        (master_nodes, slave_nodes) = get_existing_cluster(
+            conn, opts, cluster_name, die_on_error=False)
+
+        if any(slave_nodes):
+            print("The following instances will be terminated:")
+            for inst in slave_nodes:
+                print("> %s" % get_dns_name(inst, opts.private_ips))
+            print("ALL DATA ON ALL NODES WILL BE LOST!!")
+
+        msg = "Are you sure you want to delete all slaves of cluster {c}? (y/N) ".format(c=cluster_name)
+        response = raw_input(msg)
+        if response == "y":
+            print("Terminating slaves...")
+            for inst in slave_nodes:
+                inst.terminate()
+
 
     elif action == "login":
         (master_nodes, slave_nodes) = get_existing_cluster(conn, opts, cluster_name)
