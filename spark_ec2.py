@@ -810,7 +810,10 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
             print(slave_address)
             ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
 
-    modules = ['spark', 'ephemeral-hdfs', 'persistent-hdfs',
+    if opts.user == 'ubuntu':
+        modules = []
+    else :
+        modules = ['spark', 'ephemeral-hdfs', 'persistent-hdfs',
                'mapreduce', 'spark-standalone', 'tachyon', 'rstudio']
 
     if opts.hadoop_major_version == "1":
@@ -841,7 +844,6 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
     )
 
     print("Deploying files to master...")
-    print(SPARK_EC2_DIR)
     deploy_files(
         conn=conn,
         root_dir=SPARK_EC2_DIR + "/" + "deploy.generic",
@@ -866,7 +868,10 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
 
 def setup_spark_cluster(master, opts):
     ssh(master, opts, "chmod u+x spark-ec2/setup.sh")
-    ssh(master, opts, "spark-ec2/setup.sh")
+    if opts.user == 'ubuntu':
+        ssh(master, opts, "sudo spark-ec2/setup.sh")
+    else:
+        ssh(master, opts, "spark-ec2/setup.sh")
     print("Spark standalone cluster started at http://%s:8080" % master)
 
     if opts.ganglia:
@@ -1103,12 +1108,16 @@ def deploy_files(conn, root_dir, opts, master_nodes, slave_nodes, modules):
         if path.find(".svn") == -1:
             dest_dir = os.path.join('/', path[len(root_dir):])
             local_dir = tmp_dir + dest_dir
+            if opts.user == 'ubuntu':
+                local_dir = local_dir.replace('root', 'home/ubuntu')
             if not os.path.exists(local_dir):
                 os.makedirs(local_dir)
             for filename in files:
                 if filename[0] not in '#.~' and filename[-1] != '~':
                     dest_file = os.path.join(dest_dir, filename)
                     local_file = tmp_dir + dest_file
+                    if opts.user == 'ubuntu':
+                        local_file = local_file.replace('root', 'home/ubuntu')
                     with open(os.path.join(path, filename)) as src:
                         with open(local_file, "w") as dest:
                             text = src.read()
@@ -1123,6 +1132,7 @@ def deploy_files(conn, root_dir, opts, master_nodes, slave_nodes, modules):
         "%s/" % tmp_dir,
         "%s@%s:/" % (opts.user, active_master)
     ]
+    # print(command)
     subprocess.check_call(command)
     # Remove the temp directory we created above
     shutil.rmtree(tmp_dir)

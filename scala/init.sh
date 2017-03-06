@@ -1,13 +1,13 @@
 #!/bin/bash
 
-pushd /root > /dev/null
+pushd /home/ubuntu > /dev/null
 
 if [ -d "scala" ]; then
   echo "Scala seems to be installed. Exiting."
   return 0
 fi
 
-SCALA_VERSION="2.10.3"
+SCALA_VERSION="2.11.7"
 
 if [[ "0.7.3 0.8.0 0.8.1" =~ $SPARK_VERSION ]]; then
   SCALA_VERSION="2.9.3"
