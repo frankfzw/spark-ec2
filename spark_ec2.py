@@ -104,8 +104,8 @@ DEFAULT_SPARK_VERSION = SPARK_EC2_VERSION
 DEFAULT_SPARK_GITHUB_REPO = "https://github.com/apache/spark"
 
 # Default location to get the spark-ec2 scripts (and ami-list) from
-DEFAULT_SPARK_EC2_GITHUB_REPO = "https://github.com/amplab/spark-ec2"
-DEFAULT_SPARK_EC2_BRANCH = "branch-1.6"
+DEFAULT_SPARK_EC2_GITHUB_REPO = "https://github.com/frankfzw/spark-ec2"
+DEFAULT_SPARK_EC2_BRANCH = "ubuntu"
 
 
 def setup_external_libs(libs):
@@ -825,6 +825,10 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
 
     # NOTE: We should clone the repository before running deploy_files to
     # prevent ec2-variables.sh from being overwritten
+    if opts.user == 'ubuntu':
+        print("Install git on an ubuntu master at first")
+        ssh(host=master, opts=opts, command="sudo apt-get install git") 
+
     print("Cloning spark-ec2 scripts from {r}/tree/{b} on master...".format(
         r=opts.spark_ec2_git_repo, b=opts.spark_ec2_git_branch))
     ssh(
@@ -837,6 +841,7 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
     )
 
     print("Deploying files to master...")
+    print(SPARK_EC2_DIR)
     deploy_files(
         conn=conn,
         root_dir=SPARK_EC2_DIR + "/" + "deploy.generic",

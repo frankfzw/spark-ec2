@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo yum install -y -q pssh
+sudo apt-get install pssh
 
 # usage: echo_time_diff name start_time end_time
 echo_time_diff () {
@@ -11,10 +11,10 @@ echo_time_diff () {
 }
 
 # Make sure we are in the spark-ec2 directory
-pushd /root/spark-ec2 > /dev/null
+pushd /ubuntu/spark-ec2 > /dev/null
 
 # Load the environment variables specific to this AMI
-source /root/.bash_profile
+source /ubuntu/.bash_profile
 
 # Load the cluster variables set by the deploy script
 source ec2-variables.sh
@@ -52,23 +52,23 @@ fi
 echo "Setting executable permissions on scripts..."
 find . -regex "^.+.\(sh\|py\)" | xargs chmod a+x
 
-echo "RSYNC'ing /root/spark-ec2 to other cluster nodes..."
+echo "RSYNC'ing /ubuntu/spark-ec2 to other cluster nodes..."
 rsync_start_time="$(date +'%s')"
 for node in $SLAVES $OTHER_MASTERS; do
   echo $node
-  rsync -e "ssh $SSH_OPTS" -az /root/spark-ec2 $node:/root &
+  rsync -e "ssh $SSH_OPTS" -az /ubuntu/spark-ec2 $node:/ubuntu &
   scp $SSH_OPTS ~/.ssh/id_rsa $node:.ssh &
   sleep 0.1
 done
 wait
 rsync_end_time="$(date +'%s')"
-echo_time_diff "rsync /root/spark-ec2" "$rsync_start_time" "$rsync_end_time"
+echo_time_diff "rsync /ubuntu/spark-ec2" "$rsync_start_time" "$rsync_end_time"
 
 echo "Running setup-slave on all cluster nodes to mount filesystems, etc..."
 setup_slave_start_time="$(date +'%s')"
 pssh --inline \
     --host "$MASTERS $SLAVES" \
-    --user root \
+    --user ubuntu \
     --extra-args "-t -t $SSH_OPTS" \
     --timeout 0 \
     "spark-ec2/setup-slave.sh"
@@ -90,7 +90,7 @@ for module in $MODULES; do
   fi
   module_init_end_time="$(date +'%s')"
   echo_time_diff "$module init" "$module_init_start_time" "$module_init_end_time"
-  cd /root/spark-ec2  # guard against init.sh changing the cwd
+  cd /ubuntu/spark-ec2  # guard against init.sh changing the cwd
 done
 
 # Deploy templates
@@ -100,8 +100,8 @@ echo "Creating local config files..."
 
 # Copy spark conf by default
 echo "Deploying Spark config files..."
-chmod u+x /root/spark/conf/spark-env.sh
-/root/spark-ec2/copy-dir /root/spark/conf
+chmod u+x /ubuntu/spark/conf/spark-env.sh
+/ubuntu/spark-ec2/copy-dir /ubuntu/spark/conf
 
 # Setup each module
 for module in $MODULES; do
@@ -111,7 +111,7 @@ for module in $MODULES; do
   sleep 0.1
   module_setup_end_time="$(date +'%s')"
   echo_time_diff "$module setup" "$module_setup_start_time" "$module_setup_end_time"
-  cd /root/spark-ec2  # guard against setup.sh changing the cwd
+  cd /ubuntu/spark-ec2  # guard against setup.sh changing the cwd
 done
 
 popd > /dev/null
