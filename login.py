@@ -12,5 +12,5 @@ if len(sys.argv) != 2:
 name = sys.argv[1]
 
 
-cmd = "./spark-ec2 -k scache -i ~/SCache/scache.pem -r us-west-2 --zone=us-west-2a login %s" % name
+cmd = "./spark-ec2 -k scache -i ~/SCache/scache.pem -u ubuntu -r us-west-2 --zone=us-west-2a login %s" % name
 os.system(cmd)
