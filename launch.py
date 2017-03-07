@@ -13,5 +13,6 @@ name = sys.argv[1]
 slaves_num = int(sys.argv[2])
 
 
-cmd = "./spark-ec2 -k scache -i ~/SCache/scache.pem -s %d -a ami-a3f67ac3 -u ubuntu -t m4.xlarge -r us-west-2 --zone=us-west-2a --hadoop-major-version=yarn --no-ganglia launch %s" % (slaves_num, name)
+cmd = "./spark-ec2 -k scache -i ~/SCache/scache.pem -s %d -a ami-a3f67ac3 -u ubuntu -t t2.micro -r us-west-2 --zone=us-west-2a --hadoop-major-version=yarn --no-ganglia launch %s" % (slaves_num, name)
+# cmd = "./spark-ec2 -k scache -i ~/SCache/scache.pem -s %d -a ami-a3f67ac3 -u ubuntu -t m4.xlarge -r us-west-2 --zone=us-west-2a --hadoop-major-version=yarn --no-ganglia launch %s" % (slaves_num, name)
 os.system(cmd)

@@ -808,11 +808,7 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
         for slave in slave_nodes:
             slave_address = get_dns_name(slave, opts.private_ips)
             print(slave_address)
-            if opts.user == 'ubuntu':
-                cmd = "ssh-copy-id -i ~/.ssh/id_rsa.pub {}".format(slave_address)
-                ssh(host=master, opts=opts, command=cmd)
-            else :
-                ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
+            ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
 
     if opts.user == 'ubuntu':
         modules = []
@@ -873,7 +869,7 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
 def setup_spark_cluster(master, opts):
     ssh(master, opts, "chmod u+x spark-ec2/setup.sh")
     if opts.user == 'ubuntu':
-        ssh(master, opts, "sudo spark-ec2/setup.sh")
+        ssh(master, opts, "spark-ec2/setup.sh")
     else:
         ssh(master, opts, "spark-ec2/setup.sh")
     print("Spark standalone cluster started at http://%s:8080" % master)

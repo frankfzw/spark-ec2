@@ -23,7 +23,7 @@ source ec2-variables.sh
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
 PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/hostname`
 hostname $PRIVATE_DNS
-echo $PRIVATE_DNS > /etc/hostname
+sudo echo $PRIVATE_DNS > /etc/hostname
 export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 echo "Setting up Spark on `hostname`..."
@@ -56,7 +56,7 @@ rsync_start_time="$(date +'%s')"
 for node in $SLAVES $OTHER_MASTERS; do
   echo $node
   rsync -e "ssh $SSH_OPTS" -az /home/ubuntu/spark-ec2 $node:/home/ubuntu &
-  scp $SSH_OPTS ~/.ssh/id_rsa $node:.ssh &
+  # scp $SSH_OPTS ~/.ssh/id_rsa $node:.ssh &
   sleep 0.1
 done
 wait
@@ -94,13 +94,13 @@ done
 
 # Deploy templates
 # TODO: Move configuring templates to a per-module ?
-echo "Creating local config files..."
-./deploy_templates.py
+# echo "Creating local config files..."
+# ./deploy_templates.py
 
 # Copy spark conf by default
-echo "Deploying Spark config files..."
-chmod u+x /home/ubuntu/spark/conf/spark-env.sh
-/home/ubuntu/spark-ec2/copy-dir /home/ubuntu/spark/conf
+# echo "Deploying Spark config files..."
+# chmod u+x /home/ubuntu/spark/conf/spark-env.sh
+# /home/ubuntu/spark-ec2/copy-dir /home/ubuntu/spark/conf
 
 # Setup each module
 for module in $MODULES; do
