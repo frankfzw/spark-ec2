@@ -808,7 +808,11 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
         for slave in slave_nodes:
             slave_address = get_dns_name(slave, opts.private_ips)
             print(slave_address)
-            ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
+            if opts.user == 'ubuntu':
+                cmd = 'ssh-copy-id -i ~/.ssh/id_rsa.pub %s' % slave_address
+                ssh(master, opts, cmd)
+            else :
+                ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
 
     if opts.user == 'ubuntu':
         modules = []
@@ -828,9 +832,9 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
 
     # NOTE: We should clone the repository before running deploy_files to
     # prevent ec2-variables.sh from being overwritten
-    if opts.user == 'ubuntu':
-        print("Install git on an ubuntu master at first")
-        ssh(host=master, opts=opts, command="sudo apt-get install git") 
+    # if opts.user == 'ubuntu':
+    #     print("Install git on an ubuntu master at first")
+    #     ssh(host=master, opts=opts, command="sudo apt-get install git") 
 
     print("Cloning spark-ec2 scripts from {r}/tree/{b} on master...".format(
         r=opts.spark_ec2_git_repo, b=opts.spark_ec2_git_branch))

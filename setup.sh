@@ -65,7 +65,7 @@ echo_time_diff "rsync /home/ubuntu/spark-ec2" "$rsync_start_time" "$rsync_end_ti
 
 echo "Running setup-slave on all cluster nodes to mount filesystems, etc..."
 setup_slave_start_time="$(date +'%s')"
-pssh --inline \
+parallel-ssh --inline \
     --host "$MASTERS $SLAVES" \
     --user ubuntu \
     --extra-args "-t -t $SSH_OPTS" \
