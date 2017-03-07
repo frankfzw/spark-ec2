@@ -809,8 +809,8 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
             slave_address = get_dns_name(slave, opts.private_ips)
             print(slave_address)
             if opts.user == 'ubuntu':
-                cmd = 'ssh-copy-id -i ~/.ssh/id_rsa.pub %s' % slave_address
-                ssh(master, opts, cmd)
+                cmd = "ssh-copy-id -i ~/.ssh/id_rsa.pub {}".format(slave_address)
+                ssh(host=master, opts=opts, command=cmd)
             else :
                 ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
 
