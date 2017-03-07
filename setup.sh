@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sudo apt-get install pssh
 
 # usage: echo_time_diff name start_time end_time
 echo_time_diff () {
@@ -14,7 +13,7 @@ echo_time_diff () {
 pushd /home/ubuntu/spark-ec2 > /dev/null
 
 # Load the environment variables specific to this AMI
-source /home/ubuntu/.bash_profile
+source /home/ubuntu/.bashrc
 
 # Load the cluster variables set by the deploy script
 source ec2-variables.sh
@@ -39,10 +38,10 @@ OTHER_MASTERS=`cat masters | sed '1d'`
 SLAVES=`cat slaves`
 SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=5"
 
-if [[ "x$JAVA_HOME" == "x" ]] ; then
-    echo "Expected JAVA_HOME to be set in .bash_profile!"
-    exit 1
-fi
+# if [[ "x$JAVA_HOME" == "x" ]] ; then
+#     echo "Expected JAVA_HOME to be set in .bash_profile!"
+#     exit 1
+# fi
 
 if [[ `tty` == "not a tty" ]] ; then
     echo "Expecting a tty or pty! (use the ssh -t option)."

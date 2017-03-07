@@ -7,11 +7,6 @@ if [[ -e /sys/kernel/mm/transparent_hugepage/enabled ]]; then
   echo never > /sys/kernel/mm/transparent_hugepage/enabled
 fi
 
-# install java at first
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:webupd8team/java
-sudo apt-get update >/dev/null 2>&1
-sudo apt-get install oracle-java7-installer
 
 # Make sure we are in the spark-ec2 directory
 pushd /home/ubuntu/spark-ec2 > /dev/null
