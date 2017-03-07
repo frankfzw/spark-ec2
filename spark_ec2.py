@@ -809,9 +809,12 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
             slave_address = get_dns_name(slave, opts.private_ips)
             print(slave_address)
             ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
+            if opts.user == 'ubuntu':
+                print("Change chown of ~/.ssh/known_hosts of {}".format(slave_address))
+                ssh(slave_address, opts, "chown ubuntu:ubuntu ~/.ssh/known_hosts")
 
     if opts.user == 'ubuntu':
-        modules = []
+        modules = ['ephemeral-hdfs']
     else :
         modules = ['spark', 'ephemeral-hdfs', 'persistent-hdfs',
                'mapreduce', 'spark-standalone', 'tachyon', 'rstudio']
