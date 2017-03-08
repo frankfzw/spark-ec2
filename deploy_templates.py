@@ -83,7 +83,7 @@ template_vars = {
   "aws_secret_access_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
 }
 
-if template_vars['java_home'] == "":
+if template_vars['java_home'] is None:
   template_vars['java_home'] = DEFAULT_JAVA_HOME
 
 template_dir="/home/ubuntu/spark-ec2/templates"
