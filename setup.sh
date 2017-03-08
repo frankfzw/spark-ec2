@@ -22,8 +22,8 @@ source ec2-variables.sh
 # even if the instance is restarted with a different private DNS name
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
 PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/hostname`
-hostname $PRIVATE_DNS
-sudo echo $PRIVATE_DNS > /etc/hostname
+sudo hostname $PRIVATE_DNS
+sudo echo $PRIVATE_DNS | sudo tee /etc/hostname > /dev/null
 export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 echo "Setting up Spark on `hostname`..."
@@ -70,7 +70,7 @@ parallel-ssh --inline \
     --user ubuntu \
     --extra-args "-t -t $SSH_OPTS" \
     --timeout 0 \
-    "sudo spark-ec2/setup-slave.sh"
+    "spark-ec2/setup-slave.sh"
 setup_slave_end_time="$(date +'%s')"
 echo_time_diff "setup-slave" "$setup_slave_start_time" "$setup_slave_end_time"
 

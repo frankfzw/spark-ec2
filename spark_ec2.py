@@ -811,7 +811,7 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
             ssh_write(slave_address, opts, ['tar', 'x'], dot_ssh_tar)
             if opts.user == 'ubuntu':
                 print("Change chown of ~/.ssh/known_hosts of {}".format(slave_address))
-                ssh(slave_address, opts, "chown ubuntu:ubuntu ~/.ssh/known_hosts")
+                # ssh(slave_address, opts, "chown ubuntu:ubuntu ~/.ssh/known_hosts")
 
     if opts.user == 'ubuntu':
         modules = ['ephemeral-hdfs']

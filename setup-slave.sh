@@ -17,7 +17,7 @@ source ec2-variables.sh
 # even if the instance is restarted with a different private DNS name
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
 hostname $PRIVATE_DNS
-echo $PRIVATE_DNS > /etc/hostname
+sudo echo $PRIVATE_DNS | sudo tee /etc/hostname > /dev/null
 HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 echo "checking/fixing resolution of hostname"
