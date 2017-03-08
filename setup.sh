@@ -96,8 +96,6 @@ done
 # TODO: Move configuring templates to a per-module ?
 # Update JAVA_HOME at first
 JAVA_HOME="/usr/lib/jvm/java-7-oracle/"
-echo "export JAVA_HOME=$JAVA_HOME" >> ~/.bashrc
-source ~/.bashrc
 echo "Creating local config files..."
 ./deploy_templates.py
 

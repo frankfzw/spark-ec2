@@ -14,6 +14,9 @@ import sys
 mem_command = "cat /proc/meminfo | grep MemTotal | awk '{print $2}'"
 cpu_command = "nproc"
 
+
+DEFAULT_JAVA_HOME="/usr/lib/jvm/java-7-oracle/"
+
 master_ram_kb = int(
   os.popen(mem_command).read().strip())
 # This is the master's memory. Try to find slave's memory as well
@@ -79,6 +82,9 @@ template_vars = {
   "aws_access_key_id": os.getenv("AWS_ACCESS_KEY_ID"),
   "aws_secret_access_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
 }
+
+if template_vars['java_home'] == "":
+  template_vars['java_home'] = DEFAULT_JAVA_HOME
 
 template_dir="/home/ubuntu/spark-ec2/templates"
 
