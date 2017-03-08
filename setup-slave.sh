@@ -4,7 +4,7 @@
 # THP can result in system thrashing (high sys usage) due to frequent defrags of memory.
 # Most systems recommends turning THP off.
 if [[ -e /sys/kernel/mm/transparent_hugepage/enabled ]]; then
-  echo never > /sys/kernel/mm/transparent_hugepage/enabled
+  sudo echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled > /dev/null
 fi
 
 
@@ -16,7 +16,7 @@ source ec2-variables.sh
 # Set hostname based on EC2 private DNS name, so that it is set correctly
 # even if the instance is restarted with a different private DNS name
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
-hostname $PRIVATE_DNS
+sudo hostname $PRIVATE_DNS
 sudo echo $PRIVATE_DNS | sudo tee /etc/hostname > /dev/null
 HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
@@ -105,7 +105,7 @@ if [[ -e /vol3 && ! -e /vol ]]; then
 fi
 
 # Make data dirs writable by non-root users, such as CDH's hadoop user
-chmod -R a+w /mnt*
+sudo chmod -R a+w /mnt*
 
 # Remove ~/.ssh/known_hosts because it gets polluted as you start/stop many
 # clusters (new machines tend to come up under old hostnames)
@@ -115,7 +115,7 @@ rm -f /home/ubuntu/.ssh/known_hosts
 /home/ubuntu/spark-ec2/create-swap.sh $SWAP_MB
 
 # Allow memory to be over committed. Helps in pyspark where we fork
-echo 1 > /proc/sys/vm/overcommit_memory
+sudo echo 1 | sudo tee /proc/sys/vm/overcommit_memory > /dev/null
 
 # Add github to known hosts to get git@github.com clone to work
 # TODO(shivaram): Avoid duplicate entries ?
@@ -124,12 +124,12 @@ cat /home/ubuntu/spark-ec2/github.hostkey >> /home/ubuntu/.ssh/known_hosts
 # Create /usr/bin/realpath which is used by R to find Java installations
 # NOTE: /usr/bin/realpath is missing in CentOS AMIs. See
 # http://superuser.com/questions/771104/usr-bin-realpath-not-found-in-centos-6-5
-echo '#!/bin/bash' > /usr/bin/realpath
-echo 'readlink -e "$@"' >> /usr/bin/realpath
-chmod a+x /usr/bin/realpath
+# echo '#!/bin/bash' > /usr/bin/realpath
+# echo 'readlink -e "$@"' >> /usr/bin/realpath
+# chmod a+x /usr/bin/realpath
 
 popd > /dev/null
 
 # this is to set the ulimit for root and other users
-echo '* soft nofile 1000000' >> /etc/security/limits.conf
-echo '* hard nofile 1000000' >> /etc/security/limits.conf
+sudo echo '* soft nofile 1000000' | sudo tee -a /etc/security/limits.conf > /dev/null
+sudo echo '* hard nofile 1000000' | sudo tee -a /etc/security/limits.conf > /dev/null

@@ -12,8 +12,8 @@ fi
 
 SWAP_MB=$1
 if [[ "$SWAP_MB" != "0" ]]; then
-  dd if=/dev/zero of=/mnt/swap bs=1M count=$SWAP_MB
-  mkswap /mnt/swap
-  swapon /mnt/swap
+  sudo dd if=/dev/zero of=/mnt/swap bs=1M count=$SWAP_MB
+  sudo mkswap /mnt/swap
+  sudo swapon /mnt/swap
   echo "Added $SWAP_MB MB swap file /mnt/swap"
 fi
