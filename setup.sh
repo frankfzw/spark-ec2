@@ -94,6 +94,8 @@ done
 
 # Deploy templates
 # TODO: Move configuring templates to a per-module ?
+# Update JAVA_HOME at first
+source ~/.bashrc
 echo "Creating local config files..."
 ./deploy_templates.py
 
