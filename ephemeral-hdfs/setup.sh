@@ -7,7 +7,8 @@ HDFS_URL="hdfs://$PUBLIC_DNS:9000"
 echo "export HDFS_URL=$HDFS_URL" >> ~/.bashrc
 
 pushd /home/ubuntu/spark-ec2/ephemeral-hdfs > /dev/null
-sudo source ./setup-slave.sh
+source ~/.bashrc
+sudo ./setup-slave.sh
 
 for node in $SLAVES $OTHER_MASTERS; do
   echo $node
