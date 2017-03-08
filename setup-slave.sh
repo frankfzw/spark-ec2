@@ -13,6 +13,11 @@ pushd /home/ubuntu/spark-ec2 > /dev/null
 
 source ec2-variables.sh
 
+# Set JAVA_HOME
+JAVA_HOME="/usr/lib/jvm/java-7-oracle/"
+echo "export JAVA_HOME=$JAVA_HOME" >> ~/.bashrc
+source ~/.bashrc
+
 # Set hostname based on EC2 private DNS name, so that it is set correctly
 # even if the instance is restarted with a different private DNS name
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
