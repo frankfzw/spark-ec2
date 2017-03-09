@@ -16,6 +16,9 @@ source ec2-variables.sh
 # Set JAVA_HOME
 JAVA_HOME="/usr/lib/jvm/java-7-oracle/"
 echo "export JAVA_HOME=$JAVA_HOME" >> ~/.bashrc
+SCALA="/home/ubuntu/scala/"
+echo "export SCALA_HOME=$SCALA" >> ~/.bashrc
+echo "export PATH=$PATH:$SCALA_HOME/bin" >> ~/.bashrc
 source ~/.bashrc
 
 # Set hostname based on EC2 private DNS name, so that it is set correctly
@@ -111,6 +114,7 @@ fi
 
 # Make data dirs writable by non-root users, such as CDH's hadoop user
 sudo chmod -R a+w /mnt*
+sudo chmod -R a+w /var*
 
 # Remove ~/.ssh/known_hosts because it gets polluted as you start/stop many
 # clusters (new machines tend to come up under old hostnames)
