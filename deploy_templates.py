@@ -67,6 +67,7 @@ template_vars = {
   "mapred_local_dirs": os.getenv("MAPRED_LOCAL_DIRS"),
   "spark_local_dirs": os.getenv("SPARK_LOCAL_DIRS"),
   "spark_worker_mem": "%dm" % slave_ram_mb,
+  "spark_master_mem": "%dm" % (slave_ram_mb - 2048),
   "spark_worker_instances": worker_instances_str,
   "spark_worker_cores": "%d" %  worker_cores,
   "spark_master_opts": os.getenv("SPARK_MASTER_OPTS", ""),
