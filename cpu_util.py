@@ -23,13 +23,13 @@ prev_tx = 0;
 home = expanduser('~')
 
 f = open('{0}/cpu.txt'.format(home), 'w+')
-f.write('timestamp usage')
+f.write('timestamp usage\n')
 f.close()
 f = open('{0}/disk.txt'.format(home), 'w+')
-f.write('timestamp read(KB/s) write(KB/s)')
+f.write('timestamp read(KB/s) write(KB/s)\n')
 f.close()
 f = open('{0}/net.txt'.format(home), 'w+')
-f.write('timestamp rx(KB/s) tx(KB/s)')
+f.write('timestamp rx(KB/s) tx(KB/s)\n')
 f.close()
 
 while True:
