@@ -12,11 +12,11 @@ init = False
 
 home = expanduser('~')
 
-f = open('{}/cpu.txt'.format(home), 'w+')
+f = open('{0}/cpu.txt'.format(home), 'w+')
 f.close()
 
 while True:
-	result = subprocess.check_output(cmd, shell=True)
+	result = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE).communicate()[0]
 	cpu_line = result.split('\n')[0]
 	args = cpu_line.split()
 	user = int(args[1])
@@ -42,8 +42,8 @@ while True:
 		cpu_util = float(totald - idled)/float(totald)
 		prev_idle = now_idle
 		prev_nonidle = now_nonidle
-		log_str = '{} {}\n'.format(time.ctime(), cpu_util)
-		with open('{}/cpu.txt'.format(home), 'a') as f:
+		log_str = '{0} {1}\n'.format(time.ctime(), cpu_util)
+		with open('{0}/cpu.txt'.format(home), 'a') as f:
 			f.write(log_str)
 	time.sleep(0.5)
 
