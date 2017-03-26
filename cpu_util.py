@@ -33,7 +33,7 @@ f.write('timestamp rx(KB/s) tx(KB/s)\n')
 f.close()
 
 while True:
-	ts = time.ctime()
+	ts = long(round(time.time() * 1000))
 	# cpu
 	result = subprocess.Popen(cpu.split(), stdout=subprocess.PIPE).communicate()[0]
 	cpu_line = result.split('\n')[0]
