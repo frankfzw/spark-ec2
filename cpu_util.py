@@ -2,6 +2,7 @@
 
 import subprocess
 import time
+from os.path import expanduser
 
 cmd = 'cat /proc/stat'
 
@@ -9,7 +10,9 @@ prev_idle = 0
 prev_nonidle = 0
 init = False
 
-f = open('~/cpu.txt', 'w+')
+home = expanduser('~')
+
+f = open('{}/cpu.txt'.format(home), 'w+')
 f.close()
 
 while True:
@@ -39,8 +42,8 @@ while True:
 		cpu_util = float(totald - idled)/float(totald)
 		prev_idle = now_idle
 		prev_nonidle = now_nonidle
-		log_str = '{} {}'.format(time.ctime(), cpu_util)
-		with open('~/cpu.txt', 'a') as f:
+		log_str = '{} {}\n'.format(time.ctime(), cpu_util)
+		with open('{}/cpu.txt'.format(home), 'a') as f:
 			f.write(log_str)
 	time.sleep(0.5)
 
