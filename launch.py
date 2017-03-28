@@ -3,7 +3,7 @@
 import sys
 import os
 
-usg = "Usage ./.launch.py cluster_type(spark/hadoop) cluster_name slave_number existing_master(y/n)"
+usg = "Usage ./launch.py cluster_type(spark/hadoop) cluster_name slave_number existing_master(y/n)"
 
 if len(sys.argv) != 5:
     print usg

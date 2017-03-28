@@ -104,6 +104,8 @@ while True:
 		tx = int(args[9])
 		rx_rate = float(rx - prev_rx) / 512
 		tx_rate = float(tx - prev_tx) / 512
+		prev_rx = rx
+		prev_tx = tx
 		log_str = '{0} {1} {2}\n'.format(ts, rx_rate, tx_rate)
 		with open('{0}/net.txt'.format(home), 'a') as f:
 			f.write(log_str)
